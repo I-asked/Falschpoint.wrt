@@ -1,0 +1,37 @@
+body {
+	margin: 0;
+	font-family: 'Nokia Pure', sans-serif;
+}
+
+#search-btn {
+	margin-top: 6px;
+}
+
+.left {
+	float: left;
+	width: 88%;
+	margin-right: 4%;
+}
+
+.right {
+	float: right;
+	width: 8%;
+}
+
+dt {
+	font-weight: bold;
+}
+
+dd {
+	margin-left: 1em;
+}
+
+dd > ul {
+	margin-top: 0;
+	margin-left: 1em;
+	padding-left: 0;
+}
+
+button, input {
+	font-size: 1.2em;
+}

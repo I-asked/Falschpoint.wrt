@@ -1,57 +1,262 @@
-SHELL = /bin/sh
-CHMOD = chmod
-CP = cp
-MV = mv
-NOOP = $(SHELL) -c true
-RM_F = rm -f
-RM_RF = rm -rf
-TEST_F = test -f
-TOUCH = touch
-UMASK_NULL = umask 0
-DEV_NULL = > /dev/null 2>&1
-MKPATH = mkdir -p
-CAT = cat
-MAKE = make
-OPEN = open
-ECHO = echo
-ECHO_N = echo -n
-JAVA = java
+ZIP ?= zip
 
-all :: js package
+TN := falschpoint
 
-clean :: clean_libs
+SRCS := \
+	$(TN)/Info.plist \
+	$(TN)/Icon.png \
+	$(TN)/phonegap.js \
+	$(TN)/assets/fplogo52.png \
+	$(TN)/assets/placeholder_shot.png \
+	$(TN)/assets/placeholder_logo.png \
+	$(TN)/index.js \
+	$(TN)/index.css \
+	$(TN)/index.html
+SRCS += \
+	$(TN)/promise.min.js \
+	$(TN)/fetch.min.js
+SRCS += \
+	$(TN)/jquery/jquery-1.11.1.min.js \
+	$(TN)/jquery/jquery.mobile-1.4.5.min.js \
+	$(TN)/jquery/jquery.mobile.structure-1.4.5.min.css \
+	$(TN)/jquery/jquery.mobile-1.4.5.min.css \
+	$(TN)/jquery/jquery.mobile.inline-svg-1.4.5.min.css \
+	$(TN)/jquery/jquery.mobile.inline-png-1.4.5.min.css \
+	$(TN)/jquery/jquery.mobile.external-png-1.4.5.min.css \
+	$(TN)/jquery/jquery.mobile.icons-1.4.5.min.css \
+	$(TN)/jquery/images/ajax-loader.gif \
+	$(TN)/jquery/images/icons-png/action-black.png \
+	$(TN)/jquery/images/icons-png/action-white.png \
+	$(TN)/jquery/images/icons-png/alert-black.png \
+	$(TN)/jquery/images/icons-png/alert-white.png \
+	$(TN)/jquery/images/icons-png/arrow-d-black.png \
+	$(TN)/jquery/images/icons-png/arrow-d-l-black.png \
+	$(TN)/jquery/images/icons-png/arrow-d-l-white.png \
+	$(TN)/jquery/images/icons-png/arrow-d-r-black.png \
+	$(TN)/jquery/images/icons-png/arrow-d-r-white.png \
+	$(TN)/jquery/images/icons-png/arrow-d-white.png \
+	$(TN)/jquery/images/icons-png/arrow-l-black.png \
+	$(TN)/jquery/images/icons-png/arrow-l-white.png \
+	$(TN)/jquery/images/icons-png/arrow-r-black.png \
+	$(TN)/jquery/images/icons-png/arrow-r-white.png \
+	$(TN)/jquery/images/icons-png/arrow-u-black.png \
+	$(TN)/jquery/images/icons-png/arrow-u-l-black.png \
+	$(TN)/jquery/images/icons-png/arrow-u-l-white.png \
+	$(TN)/jquery/images/icons-png/arrow-u-r-black.png \
+	$(TN)/jquery/images/icons-png/arrow-u-r-white.png \
+	$(TN)/jquery/images/icons-png/arrow-u-white.png \
+	$(TN)/jquery/images/icons-png/audio-black.png \
+	$(TN)/jquery/images/icons-png/audio-white.png \
+	$(TN)/jquery/images/icons-png/back-black.png \
+	$(TN)/jquery/images/icons-png/back-white.png \
+	$(TN)/jquery/images/icons-png/bars-black.png \
+	$(TN)/jquery/images/icons-png/bars-white.png \
+	$(TN)/jquery/images/icons-png/bullets-black.png \
+	$(TN)/jquery/images/icons-png/bullets-white.png \
+	$(TN)/jquery/images/icons-png/calendar-black.png \
+	$(TN)/jquery/images/icons-png/calendar-white.png \
+	$(TN)/jquery/images/icons-png/camera-black.png \
+	$(TN)/jquery/images/icons-png/camera-white.png \
+	$(TN)/jquery/images/icons-png/carat-d-black.png \
+	$(TN)/jquery/images/icons-png/carat-d-white.png \
+	$(TN)/jquery/images/icons-png/carat-l-black.png \
+	$(TN)/jquery/images/icons-png/carat-l-white.png \
+	$(TN)/jquery/images/icons-png/carat-r-black.png \
+	$(TN)/jquery/images/icons-png/carat-r-white.png \
+	$(TN)/jquery/images/icons-png/carat-u-black.png \
+	$(TN)/jquery/images/icons-png/carat-u-white.png \
+	$(TN)/jquery/images/icons-png/check-black.png \
+	$(TN)/jquery/images/icons-png/check-white.png \
+	$(TN)/jquery/images/icons-png/clock-black.png \
+	$(TN)/jquery/images/icons-png/clock-white.png \
+	$(TN)/jquery/images/icons-png/cloud-black.png \
+	$(TN)/jquery/images/icons-png/cloud-white.png \
+	$(TN)/jquery/images/icons-png/comment-black.png \
+	$(TN)/jquery/images/icons-png/comment-white.png \
+	$(TN)/jquery/images/icons-png/delete-black.png \
+	$(TN)/jquery/images/icons-png/delete-white.png \
+	$(TN)/jquery/images/icons-png/edit-black.png \
+	$(TN)/jquery/images/icons-png/edit-white.png \
+	$(TN)/jquery/images/icons-png/eye-black.png \
+	$(TN)/jquery/images/icons-png/eye-white.png \
+	$(TN)/jquery/images/icons-png/forbidden-black.png \
+	$(TN)/jquery/images/icons-png/forbidden-white.png \
+	$(TN)/jquery/images/icons-png/forward-black.png \
+	$(TN)/jquery/images/icons-png/forward-white.png \
+	$(TN)/jquery/images/icons-png/gear-black.png \
+	$(TN)/jquery/images/icons-png/gear-white.png \
+	$(TN)/jquery/images/icons-png/grid-black.png \
+	$(TN)/jquery/images/icons-png/grid-white.png \
+	$(TN)/jquery/images/icons-png/heart-black.png \
+	$(TN)/jquery/images/icons-png/heart-white.png \
+	$(TN)/jquery/images/icons-png/home-black.png \
+	$(TN)/jquery/images/icons-png/home-white.png \
+	$(TN)/jquery/images/icons-png/info-black.png \
+	$(TN)/jquery/images/icons-png/info-white.png \
+	$(TN)/jquery/images/icons-png/location-black.png \
+	$(TN)/jquery/images/icons-png/location-white.png \
+	$(TN)/jquery/images/icons-png/lock-black.png \
+	$(TN)/jquery/images/icons-png/lock-white.png \
+	$(TN)/jquery/images/icons-png/mail-black.png \
+	$(TN)/jquery/images/icons-png/mail-white.png \
+	$(TN)/jquery/images/icons-png/minus-black.png \
+	$(TN)/jquery/images/icons-png/minus-white.png \
+	$(TN)/jquery/images/icons-png/navigation-black.png \
+	$(TN)/jquery/images/icons-png/navigation-white.png \
+	$(TN)/jquery/images/icons-png/phone-black.png \
+	$(TN)/jquery/images/icons-png/phone-white.png \
+	$(TN)/jquery/images/icons-png/plus-black.png \
+	$(TN)/jquery/images/icons-png/plus-white.png \
+	$(TN)/jquery/images/icons-png/power-black.png \
+	$(TN)/jquery/images/icons-png/power-white.png \
+	$(TN)/jquery/images/icons-png/recycle-black.png \
+	$(TN)/jquery/images/icons-png/recycle-white.png \
+	$(TN)/jquery/images/icons-png/refresh-black.png \
+	$(TN)/jquery/images/icons-png/refresh-white.png \
+	$(TN)/jquery/images/icons-png/search-black.png \
+	$(TN)/jquery/images/icons-png/search-white.png \
+	$(TN)/jquery/images/icons-png/shop-black.png \
+	$(TN)/jquery/images/icons-png/shop-white.png \
+	$(TN)/jquery/images/icons-png/star-black.png \
+	$(TN)/jquery/images/icons-png/star-white.png \
+	$(TN)/jquery/images/icons-png/tag-black.png \
+	$(TN)/jquery/images/icons-png/tag-white.png \
+	$(TN)/jquery/images/icons-png/user-black.png \
+	$(TN)/jquery/images/icons-png/user-white.png \
+	$(TN)/jquery/images/icons-png/video-black.png \
+	$(TN)/jquery/images/icons-png/video-white.png \
+	$(TN)/jquery/images/icons-svg/action-black.svg \
+	$(TN)/jquery/images/icons-svg/action-white.svg \
+	$(TN)/jquery/images/icons-svg/alert-black.svg \
+	$(TN)/jquery/images/icons-svg/alert-white.svg \
+	$(TN)/jquery/images/icons-svg/arrow-d-black.svg \
+	$(TN)/jquery/images/icons-svg/arrow-d-l-black.svg \
+	$(TN)/jquery/images/icons-svg/arrow-d-l-white.svg \
+	$(TN)/jquery/images/icons-svg/arrow-d-r-black.svg \
+	$(TN)/jquery/images/icons-svg/arrow-d-r-white.svg \
+	$(TN)/jquery/images/icons-svg/arrow-d-white.svg \
+	$(TN)/jquery/images/icons-svg/arrow-l-black.svg \
+	$(TN)/jquery/images/icons-svg/arrow-l-white.svg \
+	$(TN)/jquery/images/icons-svg/arrow-r-black.svg \
+	$(TN)/jquery/images/icons-svg/arrow-r-white.svg \
+	$(TN)/jquery/images/icons-svg/arrow-u-black.svg \
+	$(TN)/jquery/images/icons-svg/arrow-u-l-black.svg \
+	$(TN)/jquery/images/icons-svg/arrow-u-l-white.svg \
+	$(TN)/jquery/images/icons-svg/arrow-u-r-black.svg \
+	$(TN)/jquery/images/icons-svg/arrow-u-r-white.svg \
+	$(TN)/jquery/images/icons-svg/arrow-u-white.svg \
+	$(TN)/jquery/images/icons-svg/audio-black.svg \
+	$(TN)/jquery/images/icons-svg/audio-white.svg \
+	$(TN)/jquery/images/icons-svg/back-black.svg \
+	$(TN)/jquery/images/icons-svg/back-white.svg \
+	$(TN)/jquery/images/icons-svg/bars-black.svg \
+	$(TN)/jquery/images/icons-svg/bars-white.svg \
+	$(TN)/jquery/images/icons-svg/bullets-black.svg \
+	$(TN)/jquery/images/icons-svg/bullets-white.svg \
+	$(TN)/jquery/images/icons-svg/calendar-black.svg \
+	$(TN)/jquery/images/icons-svg/calendar-white.svg \
+	$(TN)/jquery/images/icons-svg/camera-black.svg \
+	$(TN)/jquery/images/icons-svg/camera-white.svg \
+	$(TN)/jquery/images/icons-svg/carat-d-black.svg \
+	$(TN)/jquery/images/icons-svg/carat-d-white.svg \
+	$(TN)/jquery/images/icons-svg/carat-l-black.svg \
+	$(TN)/jquery/images/icons-svg/carat-l-white.svg \
+	$(TN)/jquery/images/icons-svg/carat-r-black.svg \
+	$(TN)/jquery/images/icons-svg/carat-r-white.svg \
+	$(TN)/jquery/images/icons-svg/carat-u-black.svg \
+	$(TN)/jquery/images/icons-svg/carat-u-white.svg \
+	$(TN)/jquery/images/icons-svg/check-black.svg \
+	$(TN)/jquery/images/icons-svg/check-white.svg \
+	$(TN)/jquery/images/icons-svg/clock-black.svg \
+	$(TN)/jquery/images/icons-svg/clock-white.svg \
+	$(TN)/jquery/images/icons-svg/cloud-black.svg \
+	$(TN)/jquery/images/icons-svg/cloud-white.svg \
+	$(TN)/jquery/images/icons-svg/comment-black.svg \
+	$(TN)/jquery/images/icons-svg/comment-white.svg \
+	$(TN)/jquery/images/icons-svg/delete-black.svg \
+	$(TN)/jquery/images/icons-svg/delete-white.svg \
+	$(TN)/jquery/images/icons-svg/edit-black.svg \
+	$(TN)/jquery/images/icons-svg/edit-white.svg \
+	$(TN)/jquery/images/icons-svg/eye-black.svg \
+	$(TN)/jquery/images/icons-svg/eye-white.svg \
+	$(TN)/jquery/images/icons-svg/forbidden-black.svg \
+	$(TN)/jquery/images/icons-svg/forbidden-white.svg \
+	$(TN)/jquery/images/icons-svg/forward-black.svg \
+	$(TN)/jquery/images/icons-svg/forward-white.svg \
+	$(TN)/jquery/images/icons-svg/gear-black.svg \
+	$(TN)/jquery/images/icons-svg/gear-white.svg \
+	$(TN)/jquery/images/icons-svg/grid-black.svg \
+	$(TN)/jquery/images/icons-svg/grid-white.svg \
+	$(TN)/jquery/images/icons-svg/heart-black.svg \
+	$(TN)/jquery/images/icons-svg/heart-white.svg \
+	$(TN)/jquery/images/icons-svg/home-black.svg \
+	$(TN)/jquery/images/icons-svg/home-white.svg \
+	$(TN)/jquery/images/icons-svg/info-black.svg \
+	$(TN)/jquery/images/icons-svg/info-white.svg \
+	$(TN)/jquery/images/icons-svg/location-black.svg \
+	$(TN)/jquery/images/icons-svg/location-white.svg \
+	$(TN)/jquery/images/icons-svg/lock-black.svg \
+	$(TN)/jquery/images/icons-svg/lock-white.svg \
+	$(TN)/jquery/images/icons-svg/mail-black.svg \
+	$(TN)/jquery/images/icons-svg/mail-white.svg \
+	$(TN)/jquery/images/icons-svg/minus-black.svg \
+	$(TN)/jquery/images/icons-svg/minus-white.svg \
+	$(TN)/jquery/images/icons-svg/navigation-black.svg \
+	$(TN)/jquery/images/icons-svg/navigation-white.svg \
+	$(TN)/jquery/images/icons-svg/phone-black.svg \
+	$(TN)/jquery/images/icons-svg/phone-white.svg \
+	$(TN)/jquery/images/icons-svg/plus-black.svg \
+	$(TN)/jquery/images/icons-svg/plus-white.svg \
+	$(TN)/jquery/images/icons-svg/power-black.svg \
+	$(TN)/jquery/images/icons-svg/power-white.svg \
+	$(TN)/jquery/images/icons-svg/recycle-black.svg \
+	$(TN)/jquery/images/icons-svg/recycle-white.svg \
+	$(TN)/jquery/images/icons-svg/refresh-black.svg \
+	$(TN)/jquery/images/icons-svg/refresh-white.svg \
+	$(TN)/jquery/images/icons-svg/search-black.svg \
+	$(TN)/jquery/images/icons-svg/search-white.svg \
+	$(TN)/jquery/images/icons-svg/shop-black.svg \
+	$(TN)/jquery/images/icons-svg/shop-white.svg \
+	$(TN)/jquery/images/icons-svg/star-black.svg \
+	$(TN)/jquery/images/icons-svg/star-white.svg \
+	$(TN)/jquery/images/icons-svg/tag-black.svg \
+	$(TN)/jquery/images/icons-svg/tag-white.svg \
+	$(TN)/jquery/images/icons-svg/user-black.svg \
+	$(TN)/jquery/images/icons-svg/user-white.svg \
+	$(TN)/jquery/images/icons-svg/video-black.svg \
+	$(TN)/jquery/images/icons-svg/video-white.svg \
+	$(TN)/jquery/jquery.mobile.theme-1.4.5.min.css
 
-clean_libs:
-	-$(RM_RF) lib
-	
-package:
-	cp lib/phonegap.js framework/www/phonegap.js
-	cd framework/ && zip -r app.zip www/* -x www/wrt_preview_frame.html www/wrt_preview_main.html www/preview/ www/*.wgz
-	mv framework/app.zip app.wgz
-	
-js: lib/phonegap.js
+PG_SRCS := \
+	js/phonegap.js.base \
+	js/acceleration.js \
+	js/accelerometer.js \
+	js/audio.js \
+	js/camera.js \
+	js/camera/com.nokia.device.framework.js \
+	js/camera/com.nokia.device.utility.js \
+	js/camera/s60_camera.js \
+	js/camera/com.nokia.device.camera.js \
+	js/contacts.js \
+	js/debugconsole.js \
+	js/device.js \
+	js/geolocation.js \
+	js/map.js \
+	js/network.js \
+	js/notification.js \
+	js/orientation.js \
+	js/position.js \
+	js/sms.js \
+	js/storage.js \
+	js/telephony.js
 
-lib/phonegap.js: js/phonegap.js.base js/acceleration.js js/accelerometer.js js/audio.js js/camera.js js/camera/com.nokia.device.utility.js js/camera/com.nokia.device.framework.js js/camera/s60_camera.js js/camera/com.nokia.device.camera.js js/contacts.js js/debugconsole.js js/device.js js/geolocation.js js/map.js js/network.js js/notification.js js/orientation.js js/position.js js/sms.js js/storage.js js/telephony.js
-	$(MKPATH) lib
-	$(RM_F) $@
-	$(CAT) js/phonegap.js.base >> $@
-	$(CAT) js/acceleration.js >> $@
-	$(CAT) js/accelerometer.js >> $@
-	$(CAT) js/audio.js >> $@
-	$(CAT) js/camera.js >> $@
-	$(CAT) js/camera/com.nokia.device.utility.js >> $@
-	$(CAT) js/camera/com.nokia.device.framework.js >> $@
-	$(CAT) js/camera/s60_camera.js >> $@
-	$(CAT) js/camera/com.nokia.device.camera.js >> $@
-	$(CAT) js/contacts.js >> $@
-	$(CAT) js/debugconsole.js >> $@
-	$(CAT) js/device.js >> $@
-	$(CAT) js/geolocation.js >> $@
-	$(CAT) js/map.js >> $@
-	$(CAT) js/network.js >> $@
-	$(CAT) js/notification.js >> $@
-	$(CAT) js/orientation.js >> $@
-	$(CAT) js/position.js >> $@
-	$(CAT) js/sms.js >> $@
-	$(CAT) js/storage.js >> $@
-	$(CAT) js/telephony.js >> $@
+.PHONY: clean
+
+$(TN).wgz: $(SRCS)
+	$(ZIP) $@ $^
+
+$(TN)/phonegap.js: $(PG_SRCS)
+	cat $^ >$@
+
+clean:
+	$(RM) $(TN).wgz $(TN)/phonegap.js

@@ -1,0 +1,110 @@
+<?xml version="1.0" charset="UTF-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+	<meta http-equiv="Content-Type" content="text/html+xml;charset=UTF-8"/>
+	<meta name="viewport" content="width=device-width,initial-scale=1"/>
+	<title>Falschpoint</title>
+	<link rel="stylesheet" href="jquery/jquery.mobile-1.4.5.min.css"/>
+	<link rel="stylesheet" href="index.css"/>
+	<script src="phonegap.js"></script>
+	<script src="promise.min.js"></script>
+	<script src="fetch.min.js"></script>
+	<script src="jquery/jquery-1.11.1.min.js"></script>
+	<script src="jquery/jquery.mobile-1.4.5.min.js"></script>
+</head>
+<body>
+<div data-role="page" id="search-page">
+<div data-role="header" data-theme="b" data-position="fixed">
+	<h1 style="font-size:1.4em;"><img alt="Falschpoint" height="20" src="assets/fplogo52.png"/>&nbsp;Falschpoint</h1>
+	<div class="ui-bar ui-bar-b">
+		<form id="search-form" action="#" method="get">
+			<div class="left">
+				<label for="search" class="ui-hidden-accessible">Search Input:</label>
+				<input type="search" name="search" id="search-field" value="" data-mini="true" placeholder="Search&hellip;">
+			</div>
+			<div class="right">
+				<button type="submit" id="search-btn" data-role="button" data-icon="search" data-iconpos="notext" data-theme="b" class="ui-mini">Search</button>
+			</div>
+		</form>
+	</div>
+</div>
+<div data-role="footer" data-theme="b" data-position="fixed">
+	<div data-role="navbar">
+		<ul>
+			<li><a href="#favs-page" data-icon="star">Favorites</a></li>
+			<li><a href="#search-page" class="ui-btn-active ui-state-persist" data-icon="search">Search</a></li>
+			<li><a href="#info-page" data-icon="info">About</a></li>
+		</ul>
+	</div>
+</div>
+<div data-role="popup" id="error-popup" data-overlay-theme="b" data-theme="a" class="ui-content" style="max-width:300px;">
+	<p id="error-text"></p>
+</div>
+<div data-role="content">
+	<ul data-role="listview" id="results" data-inset="true">
+		<li><em>Search results will appear here&hellip;</em></li>
+	</ul>
+</div>
+</div>
+<div data-role="page" id="favs-page">
+<div data-role="header" data-theme="b" data-position="fixed">
+	<h1>Favorites</h1>
+	<a href="#" class="ui-btn ui-corner-all ui-btn-inline ui-mini footer-button-left ui-btn-icon-left ui-icon-back" data-direction="reverse" data-rel="back">Back</a>
+</div>
+<div data-role="content">
+	<ul data-role="listview" id="favorites" data-inset="true"></ul>
+</div>
+</div>
+<div data-role="page" id="game-page">
+<div data-role="header" data-position="fixed">
+	<h1 class="game-name"></h1>
+	<a href="#" class="ui-btn ui-corner-all ui-btn-inline ui-mini footer-button-left ui-btn-icon-left ui-icon-back" data-direction="reverse" data-rel="back">Back</a>
+	<a href="#" class="ui-btn ui-corner-all ui-btn-inline ui-mini footer-button-right ui-btn-icon-right ui-icon-action link-act" id="game-play">Get</a>
+</div>
+<div data-role="content">
+	<img class="game-shot" src="assets/placeholder_shot.png" style="max-width:100%;margin-bottom:8px;"/>
+	<center>
+		<form action="#" method="get" id="game-fav" style="max-width:160px;">
+			<fieldset data-role="controlgroup">
+				<input type="submit" data-icon="star" data-mini="true" value="Favorite"/>
+			</fieldset>
+		</form>
+	</center>
+	<div id="game-cset" data-role="collapsibleset" data-theme="a" data-content-theme="a" style="margin-top:16px;">
+		<div data-role="collapsible" class="collapsible-dyn" data-collapsed="false">
+			<h3 class="game-name">&hellip;</h3>
+			<p class="game-desc"></p>
+		</div>
+		<div data-role="collapsible">
+			<h3>More information</h3>
+			<dl>
+				<dt>Developer</dt>
+				<dd class="game-devl"></dd>
+				<dt>Publisher</dt>
+				<dd class="game-publ"></dd>
+				<dt>Release date</dt>
+				<dd class="game-reld"></dd>
+				<dt>Tags</dt>
+				<dd><ul id="game-tags"></ul></dd>
+			</dl>
+		</div>
+	</div>
+</div>
+</div>
+<div data-role="page" id="info-page">
+<div data-role="header" data-theme="b" data-position="fixed">
+	<h1>About&hellip;</h1>
+	<a href="#" class="ui-btn ui-corner-all ui-btn-inline ui-mini footer-button-left ui-btn-icon-left ui-icon-back" data-direction="reverse" data-rel="back">Back</a>
+</div>
+<div data-role="content">
+<h3 class="ui-bar ui-bar-a">Falschpoint</h3>
+	<div class="ui-body">
+		<p><strong>Falschpoint</strong> is a Flashpoint Archive client for Symbian.</p>
+		<p>GitHub project page: <a href="https://github.com/I-asked/Falschpoint.wrt" class="link-act">github.com/I-asked/Falschpoint.wrt</a></p>
+	</div>
+</div>
+</div>
+<script src="index.js"></script>
+</body>
+</html>
