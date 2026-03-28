@@ -1,13 +1,16 @@
 'use strict';
 
-function updateFavs(favs) {
+function updateFavs() {
 	$('#favorites').empty();
 	if (favs.length > 0) {
 		updateItems($('#favorites'), favs);
 	} else {
 		$('<li><em>Nothing here yet&hellip;</em></li>').appendTo($('#favorites'));
+		$('#favorites').listview('refresh');
 	}
 }
+
+window.favs = [];
 
 $(document).on('deviceready', function() {
 	if (window.widget !== undefined) {
@@ -15,10 +18,10 @@ $(document).on('deviceready', function() {
 			e.preventDefault();
 			window.widget.openURL($(e.target).attr('href'));
 		});
-		updateFavs(JSON.parse(window.widget.preferenceForKey('favorites') || '[]'));
-	} else {
-		updateFavs([]);
+
+		window.favs = JSON.parse(window.widget.preferenceForKey('favorites') || '[]');
 	}
+	updateFavs();
 });
 
 function searchUrlFor(query) {
@@ -120,6 +123,21 @@ function updateItems(list, items, iCb) {
 		a.append(h2);
 		a.append(p);
 		li.append(a);
+		if (list.data('split-theme')) {
+			li.append($('<a>', {
+				click: function(e) {
+					var newFavs = [];
+					favs.forEach(function(fa) {
+						if (fa.id !== ent.id) { newFavs.push(fa); }
+					});
+					window.favs = newFavs;
+					updateFavs();
+					if (window.widget !== undefined) {
+						window.widget.setPreferenceForKey(JSON.stringify(favs), 'favorites');
+					}
+				},
+			}));
+		}
 		list.append(li);
 	});
 	list.listview('refresh');
@@ -185,16 +203,17 @@ $(document).ready(function() {
 
 	$('#game-fav').on('submit', function(e) {
 		e.preventDefault();
-		if (!window.currentGame || !window.widget) { return; }
-		var favs = JSON.parse(window.widget.preferenceForKey('favorites') || '[]');
+		if (!window.currentGame) { return; }
 		var hasFav = false;
 		favs.forEach(function(fa) {
 			if (fa.id === window.currentGame.id) { hasFav = true; }
 		});
 		if (!hasFav) {
 			favs.push(window.currentGame);
-			updateFavs(favs);
-			window.widget.setPreferenceForKey(JSON.stringify(favs), 'favorites');
+			updateFavs();
+			if (window.widget !== undefined) {
+				window.widget.setPreferenceForKey(JSON.stringify(favs), 'favorites');
+			}
 		}
 	});
 });
