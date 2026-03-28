@@ -1,7 +1,7 @@
 /*
-Copyright © 2009 Nokia. All rights reserved.
+Copyright Â© 2009 Nokia. All rights reserved.
 Code licensed under the BSD License:
-Software License Agreement (BSD License) Copyright © 2009 Nokia.
+Software License Agreement (BSD License) Copyright Â© 2009 Nokia.
 All rights reserved.
 Redistribution and use of this software in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

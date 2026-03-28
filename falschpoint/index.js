@@ -100,7 +100,7 @@ function updateItems(list, items, iCb) {
 							$.mobile.pageContainer.pagecontainer('change', '#game-page', {
 								transition: 'slide',
 								changeHash: true,
-								reload: false,
+								reload: false
 							});
 						} else {
 							$('#error-text').text('Error: ' + data);
@@ -114,7 +114,7 @@ function updateItems(list, items, iCb) {
 						$('#error-text').text('Request failed: ' + err.toString());
 						$('#error-popup').popup().popup('open');
 					});
-			},
+			}
 		});
 		var img = $('<img>', { src: logoUrlFor(ent.id) });
 		var h2 = $('<h2></h2>').text(ent.title);
@@ -135,7 +135,7 @@ function updateItems(list, items, iCb) {
 					if (window.widget !== undefined) {
 						window.widget.setPreferenceForKey(JSON.stringify(favs), 'favorites');
 					}
-				},
+				}
 			}));
 		}
 		list.append(li);
