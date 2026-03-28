@@ -6,7 +6,7 @@ function updateFavs() {
 		updateItems($('#favorites'), favs);
 	} else {
 		$('<li><em>Nothing here yet&hellip;</em></li>').appendTo($('#favorites'));
-		$('#favorites').listview('refresh');
+		$('#favorites').listview().listview('refresh');
 	}
 }
 
@@ -25,7 +25,7 @@ $(document).on('deviceready', function() {
 });
 
 function searchUrlFor(query) {
-	return 'https://db-api.unstable.life/search?smartSearch=' + encodeURIComponent(query) + '&filter=true&fields=id,title,platform,originalDescription';
+	return 'https://db-api.unstable.life/search?smartSearch=' + encodeURIComponent(query) + '&filter=true&fields=id,title,originalDescription&platform=Flash&zipped=true';
 }
 
 function infoUrlFor(id) {
